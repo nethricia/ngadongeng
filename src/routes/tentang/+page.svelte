@@ -147,6 +147,10 @@
 				<p class="text-sm text-bark/70">Graphic &amp; Design Ngadongeng</p>
 			</div>
 			<div class="bg-cream rounded-xl border border-kulit/20 p-4">
+				<p class="font-semibold text-bark">Euis Yuningsih</p>
+				<p class="text-sm text-bark/70">Editor Ngadongeng</p>
+			</div>
+			<div class="bg-cream rounded-xl border border-kulit/20 p-4">
 				<p class="font-semibold text-bark">Chrisna Adhi</p>
 				<p class="text-sm text-bark/70">Web Maintainer Ngadongeng</p>
 			</div>
