@@ -12,11 +12,12 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 	const db = locals.db;
 	const { slug } = params;
 
-	// Fetch story + contributor
+	// Fetch story + contributor + submitter
 	const [row] = await db
 		.select()
 		.from(schema.stories)
 		.leftJoin(schema.contributors, eq(schema.stories.contributorId, schema.contributors.id))
+		.leftJoin(schema.users, eq(schema.stories.submittedBy, schema.users.id))
 		.where(and(eq(schema.stories.slug, slug), eq(schema.stories.status, 'published')))
 		.limit(1)
 		.all();
@@ -37,6 +38,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		.select()
 		.from(schema.stories)
 		.leftJoin(schema.contributors, eq(schema.stories.contributorId, schema.contributors.id))
+		.leftJoin(schema.users, eq(schema.stories.submittedBy, schema.users.id))
 		.where(
 			and(
 				eq(schema.stories.status, 'published'),
@@ -57,8 +59,8 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		.all();
 
 	return {
-		story: mapStory(row.stories, row.contributors),
-		related: relatedRows.map((r) => mapStory(r.stories, r.contributors)),
+		story: mapStory(row.stories, row.contributors, row.users),
+		related: relatedRows.map((r) => mapStory(r.stories, r.contributors, r.users)),
 		reactions: Object.fromEntries(reactionCounts.map((r) => [r.type, r.count]))
 	};
 };

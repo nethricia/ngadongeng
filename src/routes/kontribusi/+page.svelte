@@ -32,7 +32,7 @@
 		</div>
 		<h2 class="heading text-2xl mb-8">Langkah-langkah Berkontribusi</h2>
 		<ol class="space-y-6">
-			{#each [['Buat akun gratis', 'Masuk sekali dengan Google; akun akan dibuat otomatis dan langsung dapat digunakan.'], ['Pilih format cerita', 'Teks, komik, audio, atau video — pilih sesuai kemampuan dan ceritamu.'], ['Isi informasi cerita', 'Judul, kategori, bahasa, wilayah asal cerita, dan sinopsis singkat.'], ['Unggah kontenmu', 'Teks ditulis langsung di editor. Komik, audio, dan video diunggah sebagai file.'], ['Pratinjau dan kirim', 'Cek tampilannya, lalu kirim untuk ditinjau kurator.'], ['Ceritamu tayang', 'Setelah disetujui, ceritamu akan langsung bisa dibaca dan dinikmati semua orang.']] as [title, body], i}
+			{#each [['Buat akun gratis', 'Masuk sekali dengan Google; akun akan dibuat otomatis dan langsung dapat digunakan.'], ['Pilih format cerita', 'Teks, komik, audio, atau video — satu cerita boleh memuat beberapa format sekaligus.'], ['Isi informasi cerita', 'Judul, kategori, bahasa, wilayah asal cerita, dan sinopsis singkat.'], ['Tautkan kontenmu', 'Teks ditulis langsung di editor. Komik, audio, dan video ditautkan dari layanan penyimpanan — tidak ada berkas yang diunggah.'], ['Pratinjau dan kirim', 'Cek pratinjau setiap media, lalu kirim untuk ditinjau kurator.'], ['Ceritamu tayang', 'Setelah disetujui, ceritamu akan langsung bisa dibaca dan dinikmati semua orang.']] as [title, body], i (title)}
 				<li class="flex gap-5">
 					<div
 						class="w-9 h-9 rounded-full bg-tanah text-cream flex items-center justify-center flex-shrink-0 font-display font-bold text-sm mt-0.5"
@@ -55,14 +55,14 @@
 	<section>
 		<h2 class="heading text-2xl mb-8">Panduan Format</h2>
 		<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-			{#each [{ icon: 'i-ph-text-aa', title: 'TEKS', items: ['Format: Markdown atau teks biasa', 'Panjang: Tidak ada batasan minimum/maksimum', 'Tips: Sertakan pengantar singkat tentang asal-usul cerita'] }, { icon: 'i-ph-paint-brush', title: 'KOMIK', items: ['Format: JPG atau PNG, resolusi min. 1000px lebar', 'Jumlah: 1–40 halaman', 'Tips: Urutan halaman harus jelas; sertakan teks di dalam gambar'] }, { icon: 'i-ph-microphone', title: 'AUDIO', items: ['Format: MP3 atau WAV', 'Kualitas: Min. 128kbps', 'Tips: Gunakan ruangan yang sunyi; sertakan transkrip teks'] }, { icon: 'i-ph-video-camera', title: 'AUDIOVISUAL', items: ['Format: MP4 (H.264)', 'Resolusi: Min. 720p', 'Tips: Sertakan file subtitle (.vtt) agar dapat diakses semua pengguna'] }] as fmt}
+			{#each [{ icon: 'i-ph-text-aa', title: 'TEKS', items: ['Cara: tulis atau tempel langsung di editor', 'Format: Markdown atau teks biasa', 'Panjang: Tidak ada batasan minimum/maksimum', 'Tips: Sertakan pengantar singkat tentang asal-usul cerita'] }, { icon: 'i-ph-paint-brush', title: 'KOMIK', items: ['Cara: tautkan dokumen PDF', 'Sumber: Google Drive, tautan .pdf langsung, atau Canva', 'Tips: Pastikan berkas dapat dilihat publik — "siapa saja yang memiliki tautan"', 'Tips: Beri jeda halaman yang jelas di dalam dokumen'] }, { icon: 'i-ph-microphone', title: 'AUDIO', items: ['Cara: tautkan rekaman audio', 'Sumber: SoundCloud, Archive.org, Spotify, Google Drive, atau berkas .mp3/.ogg/.wav langsung', 'Tips: Sertakan transkrip teks agar dapat diakses semua pengguna', 'Catatan: Google Drive kurang andal untuk audio'] }, { icon: 'i-ph-video-camera', title: 'AUDIOVISUAL', items: ['Cara: tautkan video', 'Sumber: YouTube, Vimeo, Google Drive, atau berkas .mp4/.webm langsung', 'Tips: Sertakan subtitle (.vtt) bila tersedia'] }] as fmt (fmt.title)}
 				<div class="card p-5">
 					<div class="flex items-center gap-3 mb-4">
 						<i class="{fmt.icon} text-xl text-tanah" aria-hidden="true"></i>
 						<span class="label text-tanah">{fmt.title}</span>
 					</div>
 					<ul class="space-y-2">
-						{#each fmt.items as item}
+						{#each fmt.items as item (item)}
 							<li class="prose-body text-sm text-bark/70 flex gap-2">
 								<i class="i-ph-check text-success flex-shrink-0 mt-0.5" aria-hidden="true"></i>
 								{item}
@@ -78,12 +78,12 @@
 	<section class="bg-parchment rounded-xl p-8">
 		<h2 class="heading text-xl mb-4">Lisensi Konten</h2>
 		<p class="prose-body text-bark/80 mb-4">
-			Semua cerita yang diunggah ke Ngadongeng dilisensikan di bawah
+			Semua cerita yang dibagikan di Ngadongeng dilisensikan di bawah
 			<strong>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 (CC BY-NC-SA 4.0)</strong>,
 			kecuali ada perjanjian khusus dengan kontributor.
 		</p>
 		<ul class="space-y-2">
-			{#each [['check-circle', 'Orang lain boleh membagikan dan mengadaptasi ceritamu', true], ['check-circle', 'Nama kamu tetap tercantum sebagai kontributor', true], ['x-circle', 'Tidak boleh digunakan untuk kepentingan komersial tanpa izin', false]] as [icon, text, ok]}
+			{#each [['check-circle', 'Orang lain boleh membagikan dan mengadaptasi ceritamu', true], ['check-circle', 'Nama kamu tetap tercantum sebagai kontributor', true], ['x-circle', 'Tidak boleh digunakan untuk kepentingan komersial tanpa izin', false]] as [icon, text, ok] (text)}
 				<li class="flex items-start gap-2 prose-body text-sm text-bark/80">
 					<i
 						class="i-ph-{icon} {ok ? 'text-success' : 'text-danger'} flex-shrink-0 mt-0.5"

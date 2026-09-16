@@ -7,6 +7,7 @@
 	const STATUS_LABEL: Record<string, string> = {
 		draft: 'Draf',
 		pending_review: 'Menunggu Ulasan',
+		needs_revision: 'Perlu Revisi',
 		published: 'Terbit',
 		rejected: 'Ditolak',
 		archived: 'Diarsipkan'
@@ -14,6 +15,7 @@
 	const STATUS_CLASS: Record<string, string> = {
 		draft: 'status-draft',
 		pending_review: 'status-pending',
+		needs_revision: 'status-revision',
 		published: 'status-published',
 		rejected: 'status-rejected',
 		archived: 'status-archived'
@@ -65,8 +67,17 @@
 					</thead>
 					<tbody class="divide-y divide-kulit/20">
 						{#each data.stories as story (story.id)}
+							{@const note = data.feedback[story.id]}
 							<tr class="hover:bg-cream/60 transition-colors">
-								<td class="px-4 py-3.5 font-medium text-bark">{story.title}</td>
+								<td class="px-4 py-3.5 font-medium text-bark">
+									{story.title}
+									{#if note && (story.status === 'needs_revision' || story.status === 'rejected')}
+										<p class="mt-1.5 max-w-md font-sans text-xs font-normal text-bark/60">
+											<span class="font-semibold text-cai-dark">Catatan kurator:</span>
+											{note}
+										</p>
+									{/if}
+								</td>
 								<td class="px-4 py-3.5 text-bark/70 capitalize hidden sm:table-cell"
 									>{story.format}</td
 								>
@@ -81,7 +92,7 @@
 								<td class="px-4 py-3.5 text-right whitespace-nowrap">
 									{#if story.status === 'published'}
 										<a
-											href={resolve('/cerita/' + story.slug)}
+											href={resolve('/cerita/[slug]', { slug: story.slug })}
 											class="font-mono text-xs text-cai hover:underline">Lihat →</a
 										>
 									{:else if story.status === 'draft' || story.status === 'rejected'}

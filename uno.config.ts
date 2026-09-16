@@ -136,6 +136,8 @@ export default defineConfig({
 			'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-bark/10 text-bark',
 		'status-pending':
 			'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-padi/30 text-bark',
+		'status-revision':
+			'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-cai/15 text-cai-dark',
 		'status-published':
 			'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success/15 text-success',
 		'status-rejected':

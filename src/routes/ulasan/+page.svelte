@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import type { PageData } from './$types';
 	let { data }: { data: PageData } = $props();
 
@@ -40,7 +41,7 @@
 						</tr>
 					</thead>
 					<tbody class="divide-y divide-kulit/20">
-						{#each data.pending as story}
+						{#each data.pending as story (story.id)}
 							<tr class="hover:bg-cream/60 transition-colors">
 								<td class="px-4 py-3.5 font-medium text-bark">{story.title}</td>
 								<td class="px-4 py-3.5 text-bark/70 capitalize hidden sm:table-cell"
@@ -54,7 +55,7 @@
 								</td>
 								<td class="px-4 py-3.5 text-right">
 									<a
-										href={resolve('/ulasan/' + story.id)}
+										href={resolve('/ulasan/[id]', { id: story.id })}
 										class="inline-flex items-center gap-1.5 bg-cai text-cream px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-cai-dark transition-colors"
 									>
 										Tinjau

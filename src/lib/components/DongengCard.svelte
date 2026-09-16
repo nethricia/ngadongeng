@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base, resolve } from '$app/paths';
 	import type { DongengStory } from '$lib/types';
 	import Avatar from './ui/Avatar.svelte';
 	import Badge from './ui/Badge.svelte';
@@ -40,27 +41,32 @@
 	let gradient = $derived(fallbackGradients[story.format]);
 	let categoryLabel = $derived(categoryLabels[story.category] ?? story.category);
 	let date = $derived(relativeDate(story.publishedAt));
+
+	/** Shown when a story has no cover of its own. */
+	const FALLBACK_COVER = `${base}/assets/cropped-headermini.png`;
+	let hasCover = $derived(Boolean(story.coverUrl));
+	let coverUrl = $derived(story.coverUrl || FALLBACK_COVER);
 </script>
 
 <a
-	href={resolve('/cerita/' + story.slug)}
+	href={resolve('/cerita/[slug]', { slug: story.slug })}
 	class="card-hover block rounded-lg overflow-hidden no-underline {story.featured
 		? 'border-l-4 border-padi'
 		: ''}"
 >
-	<!-- Cover image -->
+	<!-- Cover image — falls back to the Ngadongeng mark when none is set. -->
 	<div class="relative aspect-video bg-gradient-to-br {gradient} overflow-hidden">
-		{#if story.coverUrl}
-			<img
-				src={story.coverUrl}
-				alt={story.title}
-				class="w-full h-full object-cover"
-				loading="lazy"
-			/>
-		{/if}
-		<!-- Format chip -->
-		<div class="absolute top-3 left-3">
-			<Chip format={story.format} />
+		<img
+			src={coverUrl}
+			alt={story.title}
+			class="w-full h-full {hasCover ? 'object-cover' : 'object-contain'}"
+			loading="lazy"
+		/>
+		<!-- One chip per medium the story contains -->
+		<div class="absolute top-3 left-3 flex flex-wrap gap-1.5 max-w-[70%]">
+			{#each story.formats as fmt (fmt)}
+				<Chip format={fmt} />
+			{/each}
 		</div>
 		<!-- Featured badge -->
 		{#if story.featured}

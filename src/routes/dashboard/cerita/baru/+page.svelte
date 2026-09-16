@@ -1,17 +1,28 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import type { ActionData, PageData } from './$types';
+	import { MediaBlock } from '$lib/components/media';
+	import {
+		isHttpUrl,
+		KOMIK_SOURCE_LABELS,
+		AUDIO_SOURCE_LABELS,
+		VIDEO_SOURCE_LABELS
+	} from '$lib/media';
+	import type { AudioSource, KomikSource, StoryMedia, VideoSource } from '$lib/types';
+	import type { ActionData } from './$types';
 
-	let { data, form }: { data: PageData; form: ActionData } = $props();
+	let { form }: { form: ActionData } = $props();
 
-	let format = $state('teks');
+	// Each block is optional; the server derives the story's primary format from
+	// whichever blocks are filled in.
+	let enabled = $state({ teks: true, komik: false, audio: false, audiovisual: false });
 
-	const FORMAT_OPTIONS = [
-		{ value: 'teks', label: 'Teks (Prosa)' },
-		{ value: 'komik', label: 'Komik (Embed)' },
-		{ value: 'audio', label: 'Audio' },
-		{ value: 'audiovisual', label: 'Audiovisual / Video' }
-	];
+	let komikSource = $state<KomikSource>('gdrive');
+	let komikUrl = $state('');
+	let audioSource = $state<AudioSource>('soundcloud');
+	let audioUrl = $state('');
+	let videoSource = $state<VideoSource>('youtube');
+	let videoUrl = $state('');
+
 	const CATEGORY_OPTIONS = [
 		{ value: 'binatang', label: 'Binatang' },
 		{ value: 'dewa-dewi', label: 'Dewa-Dewi' },
@@ -38,14 +49,40 @@
 		{ value: 'indonesia', label: 'Indonesia' },
 		{ value: 'sunda-indonesia', label: 'Sunda & Indonesia' }
 	];
-	const EMBED_PROVIDERS = [
-		{ value: 'youtube', label: 'YouTube' },
-		{ value: 'gdrive', label: 'Google Drive' },
-		{ value: 'canva', label: 'Canva' },
-		{ value: 'soundcloud', label: 'SoundCloud' },
-		{ value: 'spotify', label: 'Spotify' },
-		{ value: 'other', label: 'Lainnya' }
-	];
+	const KOMIK_SOURCE_OPTIONS = Object.entries(KOMIK_SOURCE_LABELS);
+	const AUDIO_SOURCE_OPTIONS = Object.entries(AUDIO_SOURCE_LABELS);
+	const VIDEO_SOURCE_OPTIONS = Object.entries(VIDEO_SOURCE_LABELS);
+
+	/** Guidance under each URL field, so contributors paste the right link shape. */
+	const HINTS: Record<string, string> = {
+		'komik:gdrive':
+			'Tempel tautan bagikan berkas PDF dari Google Drive. Pastikan aksesnya "siapa saja yang memiliki tautan".',
+		'komik:pdf': 'Tautan langsung ke berkas .pdf, misalnya https://situs.contoh/komik.pdf',
+		'komik:canva': 'Tempel tautan desain Canva yang sudah dibagikan untuk dilihat publik.',
+		'komik:other': 'Tautan dokumen lain yang dapat ditampilkan di dalam halaman.',
+		'audio:soundcloud': 'Tempel tautan trek SoundCloud.',
+		'audio:spotify': 'Tempel tautan episode atau trek Spotify.',
+		'audio:archive': 'Tempel tautan item Archive.org (…/details/…).',
+		'audio:gdrive':
+			'Google Drive kurang andal untuk audio — sering tidak dapat diputar di komputer.',
+		'audio:direct': 'Tautan berkas .mp3, .ogg, atau .wav.',
+		'audiovisual:youtube': 'Tempel tautan YouTube (watch, youtu.be, atau Shorts).',
+		'audiovisual:vimeo': 'Tempel tautan Vimeo.',
+		'audiovisual:gdrive': 'Tempel tautan bagikan berkas video dari Google Drive.',
+		'audiovisual:direct': 'Tautan berkas .mp4 atau .webm.',
+		'audiovisual:other': 'Tautan video lain yang dapat ditampilkan di dalam halaman.'
+	};
+
+	// Live previews — contributors can confirm a link actually embeds before submitting.
+	let komikPreview = $derived<StoryMedia | null>(
+		isHttpUrl(komikUrl) ? { kind: 'komik', source: komikSource, url: komikUrl.trim() } : null
+	);
+	let audioPreview = $derived<StoryMedia | null>(
+		isHttpUrl(audioUrl) ? { kind: 'audio', source: audioSource, url: audioUrl.trim() } : null
+	);
+	let videoPreview = $derived<StoryMedia | null>(
+		isHttpUrl(videoUrl) ? { kind: 'audiovisual', source: videoSource, url: videoUrl.trim() } : null
+	);
 </script>
 
 <div class="space-y-6">
@@ -77,19 +114,11 @@
 				/>
 			</div>
 
-			<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-				<div class="space-y-1.5">
-					<label for="format" class="block text-sm font-semibold text-bark">Format *</label>
-					<select id="format" name="format" bind:value={format} required class="input-base">
-						{#each FORMAT_OPTIONS as opt}
-							<option value={opt.value}>{opt.label}</option>
-						{/each}
-					</select>
-				</div>
+			<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 				<div class="space-y-1.5">
 					<label for="category" class="block text-sm font-semibold text-bark">Kategori *</label>
 					<select id="category" name="category" required class="input-base">
-						{#each CATEGORY_OPTIONS as opt}
+						{#each CATEGORY_OPTIONS as opt (opt.value)}
 							<option value={opt.value}>{opt.label}</option>
 						{/each}
 					</select>
@@ -97,7 +126,7 @@
 				<div class="space-y-1.5">
 					<label for="language" class="block text-sm font-semibold text-bark">Bahasa *</label>
 					<select id="language" name="language" required class="input-base">
-						{#each LANGUAGE_OPTIONS as opt}
+						{#each LANGUAGE_OPTIONS as opt (opt.value)}
 							<option value={opt.value}>{opt.label}</option>
 						{/each}
 					</select>
@@ -109,7 +138,7 @@
 					<label for="genre" class="block text-sm font-semibold text-bark">Genre</label>
 					<select id="genre" name="genre" class="input-base">
 						<option value="">— Pilih genre —</option>
-						{#each GENRE_OPTIONS as opt}
+						{#each GENRE_OPTIONS as opt (opt.value)}
 							<option value={opt.value}>{opt.label}</option>
 						{/each}
 					</select>
@@ -165,11 +194,26 @@
 
 		<!-- Content -->
 		<section class="panel-card p-6 space-y-5">
-			<h2 class="heading text-base border-b border-kulit/30 pb-3">Konten Cerita</h2>
+			<div class="border-b border-kulit/30 pb-3">
+				<h2 class="heading text-base">Konten Cerita</h2>
+				<p class="font-mono text-xs text-bark/50 mt-1">
+					Satu cerita boleh memuat beberapa format sekaligus. Semua media ditautkan, bukan diunggah.
+				</p>
+			</div>
 
-			{#if format === 'teks'}
-				<div class="space-y-1.5">
-					<label for="content" class="block text-sm font-semibold text-bark">Teks Cerita</label>
+			<!-- Teks -->
+			<div class="border border-kulit/40 rounded-lg p-4 space-y-3">
+				<label class="flex items-center gap-2 cursor-pointer">
+					<input
+						type="checkbox"
+						name="teks_enabled"
+						bind:checked={enabled.teks}
+						class="w-4 h-4 accent-tanah"
+					/>
+					<i class="i-ph-book-open text-tanah" aria-hidden="true"></i>
+					<span class="font-sans font-semibold text-sm text-bark">Teks</span>
+				</label>
+				<div class:hidden={!enabled.teks} class="space-y-1.5">
 					<textarea
 						id="content"
 						name="content"
@@ -178,37 +222,175 @@
 						class="input-base font-mono text-sm resize-y"
 					></textarea>
 				</div>
-			{:else}
-				<div class="space-y-4">
+			</div>
+
+			<!-- Komik -->
+			<div class="border border-kulit/40 rounded-lg p-4 space-y-3">
+				<label class="flex items-center gap-2 cursor-pointer">
+					<input
+						type="checkbox"
+						name="komik_enabled"
+						bind:checked={enabled.komik}
+						class="w-4 h-4 accent-tanah"
+					/>
+					<i class="i-ph-paint-brush text-tanah" aria-hidden="true"></i>
+					<span class="font-sans font-semibold text-sm text-bark">Komik (dokumen)</span>
+				</label>
+				<div class:hidden={!enabled.komik} class="space-y-4">
 					<div class="space-y-1.5">
-						<label for="embedUrl" class="block text-sm font-semibold text-bark">URL Embed</label>
+						<label for="komik_source" class="block text-sm font-semibold text-bark">Sumber</label>
+						<select
+							id="komik_source"
+							name="komik_source"
+							bind:value={komikSource}
+							class="input-base"
+						>
+							{#each KOMIK_SOURCE_OPTIONS as [value, label] (value)}
+								<option {value}>{label}</option>
+							{/each}
+						</select>
+					</div>
+					<div class="space-y-1.5">
+						<label for="komik_url" class="block text-sm font-semibold text-bark">URL Komik</label>
 						<input
-							id="embedUrl"
-							name="embedUrl"
+							id="komik_url"
+							name="komik_url"
+							type="url"
+							bind:value={komikUrl}
+							placeholder="https://..."
+							class="input-base"
+						/>
+						<p class="font-mono text-xs text-bark/50 mt-1">{HINTS[`komik:${komikSource}`]}</p>
+					</div>
+					{#if komikPreview}
+						<div class="space-y-2">
+							<p class="label">Pratinjau</p>
+							<MediaBlock entry={komikPreview} title="Pratinjau komik" />
+						</div>
+					{/if}
+				</div>
+			</div>
+
+			<!-- Audio -->
+			<div class="border border-kulit/40 rounded-lg p-4 space-y-3">
+				<label class="flex items-center gap-2 cursor-pointer">
+					<input
+						type="checkbox"
+						name="audio_enabled"
+						bind:checked={enabled.audio}
+						class="w-4 h-4 accent-tanah"
+					/>
+					<i class="i-ph-microphone text-tanah" aria-hidden="true"></i>
+					<span class="font-sans font-semibold text-sm text-bark">Audio</span>
+				</label>
+				<div class:hidden={!enabled.audio} class="space-y-4">
+					<div class="space-y-1.5">
+						<label for="audio_source" class="block text-sm font-semibold text-bark">Sumber</label>
+						<select
+							id="audio_source"
+							name="audio_source"
+							bind:value={audioSource}
+							class="input-base"
+						>
+							{#each AUDIO_SOURCE_OPTIONS as [value, label] (value)}
+								<option {value}>{label}</option>
+							{/each}
+						</select>
+					</div>
+					<div class="space-y-1.5">
+						<label for="audio_url" class="block text-sm font-semibold text-bark">URL Audio</label>
+						<input
+							id="audio_url"
+							name="audio_url"
+							type="url"
+							bind:value={audioUrl}
+							placeholder="https://..."
+							class="input-base"
+						/>
+						<p class="font-mono text-xs text-bark/50 mt-1">{HINTS[`audio:${audioSource}`]}</p>
+					</div>
+					<div class="space-y-1.5">
+						<label for="audio_transcript" class="block text-sm font-semibold text-bark"
+							>Transkrip</label
+						>
+						<textarea
+							id="audio_transcript"
+							name="audio_transcript"
+							rows="5"
+							placeholder="Teks transkrip untuk aksesibilitas..."
+							class="input-base resize-y"
+						></textarea>
+					</div>
+					{#if audioPreview}
+						<div class="space-y-2">
+							<p class="label">Pratinjau</p>
+							<MediaBlock entry={audioPreview} title="Pratinjau audio" />
+						</div>
+					{/if}
+				</div>
+			</div>
+
+			<!-- Audiovisual -->
+			<div class="border border-kulit/40 rounded-lg p-4 space-y-3">
+				<label class="flex items-center gap-2 cursor-pointer">
+					<input
+						type="checkbox"
+						name="video_enabled"
+						bind:checked={enabled.audiovisual}
+						class="w-4 h-4 accent-tanah"
+					/>
+					<i class="i-ph-video-camera text-tanah" aria-hidden="true"></i>
+					<span class="font-sans font-semibold text-sm text-bark">Audiovisual / Video</span>
+				</label>
+				<div class:hidden={!enabled.audiovisual} class="space-y-4">
+					<div class="space-y-1.5">
+						<label for="video_source" class="block text-sm font-semibold text-bark">Sumber</label>
+						<select
+							id="video_source"
+							name="video_source"
+							bind:value={videoSource}
+							class="input-base"
+						>
+							{#each VIDEO_SOURCE_OPTIONS as [value, label] (value)}
+								<option {value}>{label}</option>
+							{/each}
+						</select>
+					</div>
+					<div class="space-y-1.5">
+						<label for="video_url" class="block text-sm font-semibold text-bark">URL Video</label>
+						<input
+							id="video_url"
+							name="video_url"
+							type="url"
+							bind:value={videoUrl}
+							placeholder="https://..."
+							class="input-base"
+						/>
+						<p class="font-mono text-xs text-bark/50 mt-1">{HINTS[`audiovisual:${videoSource}`]}</p>
+					</div>
+					<div class="space-y-1.5">
+						<label for="video_poster_url" class="block text-sm font-semibold text-bark"
+							>URL Gambar Sampul Video</label
+						>
+						<input
+							id="video_poster_url"
+							name="video_poster_url"
 							type="url"
 							placeholder="https://..."
 							class="input-base"
 						/>
 						<p class="font-mono text-xs text-bark/50 mt-1">
-							{format === 'komik'
-								? 'Tautan embed Canva atau Google Drive'
-								: format === 'audio'
-									? 'Tautan Google Drive, SoundCloud, atau Spotify'
-									: 'Tautan YouTube atau Google Drive'}
+							Opsional — hanya untuk berkas video langsung.
 						</p>
 					</div>
-					<div class="space-y-1.5">
-						<label for="embedProvider" class="block text-sm font-semibold text-bark">Platform</label
-						>
-						<select id="embedProvider" name="embedProvider" class="input-base">
-							<option value="">— Pilih platform —</option>
-							{#each EMBED_PROVIDERS as opt}
-								<option value={opt.value}>{opt.label}</option>
-							{/each}
-						</select>
-					</div>
+					{#if videoPreview}
+						<div class="space-y-2">
+							<p class="label">Pratinjau</p>
+							<MediaBlock entry={videoPreview} title="Pratinjau video" />
+						</div>
+					{/if}
 				</div>
-			{/if}
+			</div>
 
 			<div class="space-y-1.5">
 				<label for="coverImageUrl" class="block text-sm font-semibold text-bark"

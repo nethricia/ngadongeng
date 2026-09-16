@@ -12,11 +12,12 @@ export const load: PageServerLoad = async ({ locals }) => {
 		.select()
 		.from(schema.stories)
 		.leftJoin(schema.contributors, eq(schema.stories.contributorId, schema.contributors.id))
+		.leftJoin(schema.users, eq(schema.stories.submittedBy, schema.users.id))
 		.where(eq(schema.stories.status, 'published'))
 		.orderBy(desc(schema.stories.publishedAt))
 		.all();
 
 	return {
-		stories: rows.map((r) => mapStory(r.stories, r.contributors))
+		stories: rows.map((r) => mapStory(r.stories, r.contributors, r.users))
 	};
 };

@@ -2,7 +2,7 @@
 	import FilterBar from '$lib/components/FilterBar.svelte';
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import { StoryGrid } from '$lib/components/sections';
-	import type { DongengStory } from '$lib/types';
+	import type { DongengFormat, DongengStory } from '$lib/types';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -27,8 +27,10 @@
 			);
 		}
 
+		// Match any story that *contains* the medium, not just the primary one —
+		// a teks+audio story appears under both tabs.
 		if (f.format !== 'semua') {
-			result = result.filter((s) => s.format === f.format);
+			result = result.filter((s) => s.formats.includes(f.format as DongengFormat));
 		}
 
 		if (f.category !== 'semua') {

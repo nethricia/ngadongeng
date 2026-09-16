@@ -38,7 +38,9 @@
 	class="relative inline-flex items-center justify-center rounded-full border-2 border-kulit overflow-hidden flex-shrink-0 {sizeClass}"
 >
 	{#if src}
-		<img {src} alt={name} class="w-full h-full object-cover" />
+		<!-- Avatars are Google-hosted profile images; the navbar already requests the
+		     same URLs with referrerpolicy="no-referrer". -->
+		<img {src} alt={name} referrerpolicy="no-referrer" class="w-full h-full object-cover" />
 	{:else}
 		<span
 			class="bg-parchment text-tanah font-semibold w-full h-full flex items-center justify-center"

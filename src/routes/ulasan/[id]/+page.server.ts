@@ -14,6 +14,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		.select()
 		.from(schema.stories)
 		.leftJoin(schema.contributors, eq(schema.stories.contributorId, schema.contributors.id))
+		.leftJoin(schema.users, eq(schema.stories.submittedBy, schema.users.id))
 		.where(eq(schema.stories.id, params.id))
 		.limit(1)
 		.all();
@@ -36,7 +37,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		.all();
 
 	return {
-		story: mapStory(row.stories, row.contributors),
+		story: mapStory(row.stories, row.contributors, row.users),
 		rawStory: row.stories,
 		reviews
 	};
@@ -54,6 +55,14 @@ export const actions: Actions = {
 		const validActions = ['approved', 'rejected', 'requested_changes', 'commented'];
 		if (!action || !validActions.includes(action)) {
 			return fail(400, { error: 'Tindakan tidak valid.' });
+		}
+
+		// A revision request or rejection is meaningless without a reason — the
+		// contributor has no other way to learn what to change.
+		if ((action === 'requested_changes' || action === 'rejected') && !notes) {
+			return fail(400, {
+				error: 'Tuliskan catatan agar kontributor tahu apa yang perlu diperbaiki.'
+			});
 		}
 
 		const [story] = await db
@@ -76,13 +85,17 @@ export const actions: Actions = {
 			})
 			.run();
 
-		// Update story status
+		// Update story status. A revision request must actually move the story back
+		// to the contributor — leaving it on `pending_review` made the action look
+		// like a no-op and kept it in the review queue.
 		const newStatus: NewStory['status'] =
 			action === 'approved'
 				? 'published'
 				: action === 'rejected'
 					? 'rejected'
-					: (story.status as NewStory['status']);
+					: action === 'requested_changes'
+						? 'needs_revision'
+						: (story.status as NewStory['status']);
 
 		const updateValues: Record<string, unknown> = {
 			status: newStatus,

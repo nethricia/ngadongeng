@@ -22,6 +22,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 			.select()
 			.from(schema.stories)
 			.leftJoin(schema.contributors, eq(schema.stories.contributorId, schema.contributors.id))
+			.leftJoin(schema.users, eq(schema.stories.submittedBy, schema.users.id))
 			.where(and(eq(schema.stories.status, 'published'), eq(schema.stories.featured, true)))
 			.orderBy(desc(schema.stories.publishedAt))
 			.limit(3)
@@ -31,6 +32,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 			.select()
 			.from(schema.stories)
 			.leftJoin(schema.contributors, eq(schema.stories.contributorId, schema.contributors.id))
+			.leftJoin(schema.users, eq(schema.stories.submittedBy, schema.users.id))
 			.where(eq(schema.stories.status, 'published'))
 			.orderBy(desc(schema.stories.publishedAt))
 			.limit(8)
@@ -51,8 +53,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 	]);
 
 	return {
-		featuredStories: featured.map((r) => mapStory(r.stories, r.contributors)),
-		recentStories: recent.map((r) => mapStory(r.stories, r.contributors)),
+		featuredStories: featured.map((r) => mapStory(r.stories, r.contributors, r.users)),
+		recentStories: recent.map((r) => mapStory(r.stories, r.contributors, r.users)),
 		stats: {
 			storyCount,
 			contributorCount

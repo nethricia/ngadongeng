@@ -1,3 +1,4 @@
+import type { StoryMedia } from '$lib/types';
 import type { AdapterAccountType } from '@auth/core/adapters';
 import { relations } from 'drizzle-orm';
 import { integer, primaryKey, sqliteTable, text, unique } from 'drizzle-orm/sqlite-core';
@@ -89,14 +90,14 @@ export const contributors = sqliteTable('contributors', {
 
 // ============================================================
 // STORIES
-// Supports four formats:
-//   teks        — prose stored as markdown or HTML in `content`
-//   komik       — comic panels embedded via `embedUrl` (Canva, Google Drive, etc.)
-//   audio       — audio embedded via `embedUrl` (Google Drive, SoundCloud, Spotify)
-//   audiovisual — video embedded via `embedUrl` (YouTube, Google Drive, etc.)
+// A story carries one or more media. `content` holds the
+// written (teks) body; `media` holds every embedded medium:
+//   komik       — PDF document embedded via Drive, a direct .pdf URL, or Canva
+//   audio       — SoundCloud/Spotify/Archive.org/Drive widget, or a direct audio file
+//   audiovisual — YouTube/Vimeo/Drive player, or a direct video file
 //
 // No binary assets are stored here; all media is referenced
-// by external URL or embed code.
+// by external URL.
 // ============================================================
 
 export const stories = sqliteTable('stories', {
@@ -145,9 +146,15 @@ export const stories = sqliteTable('stories', {
 	contentType: text('content_type', { enum: ['markdown', 'html'] }).default('markdown'),
 	content: text('content'),
 
-	// ── Embedded content (komik / audio / audiovisual) ───────
-	// Also used for supplementary content on teks stories
-	// (e.g. an audio narration alongside a written text).
+	// ── Embedded media (komik / audio / audiovisual) ─────────
+	// JSON-encoded StoryMedia[]: '[{"kind":"audio","source":"soundcloud","url":"..."}]'
+	// A story may carry several; rendering order is the array order.
+	media: text('media', { mode: 'json' }).$type<StoryMedia[]>(),
+
+	// ── Deprecated: single-format embed (pre-multi-media) ────
+	// Superseded by `media`. Retained only so the migration that
+	// backfills `media` can read the historical values; nothing
+	// writes these anymore.
 	embedUrl: text('embed_url'),
 	embedProvider: text('embed_provider', {
 		enum: ['youtube', 'gdrive', 'canva', 'soundcloud', 'spotify', 'other']
@@ -168,8 +175,13 @@ export const stories = sqliteTable('stories', {
 
 	// ── Publishing ────────────────────────────────────────────
 	// draft → pending_review → published
-	//                         ↘ rejected (contributor can revise → draft → pending_review)
-	status: text('status', { enum: ['draft', 'pending_review', 'published', 'rejected', 'archived'] })
+	//                       ↘ needs_revision (curator asked for changes; the story
+	//                                        comes back to the contributor, who
+	//                                        revises and resubmits → pending_review)
+	//                       ↘ rejected (final)
+	status: text('status', {
+		enum: ['draft', 'pending_review', 'needs_revision', 'published', 'rejected', 'archived']
+	})
 		.notNull()
 		.default('draft'),
 	featured: integer('featured', { mode: 'boolean' }).notNull().default(false),

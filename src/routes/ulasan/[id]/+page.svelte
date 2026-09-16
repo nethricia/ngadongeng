@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { MediaBlock } from '$lib/components/media';
+	import { MEDIA_KIND_LABELS, mediaSourceLabel } from '$lib/media';
 	import type { ActionData, PageData } from './$types';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
@@ -20,6 +22,7 @@
 	const STATUS_CLASS: Record<string, string> = {
 		draft: 'status-draft',
 		pending_review: 'status-pending',
+		needs_revision: 'status-revision',
 		published: 'status-published',
 		rejected: 'status-rejected',
 		archived: 'status-archived'
@@ -27,6 +30,7 @@
 	const STATUS_LABEL: Record<string, string> = {
 		draft: 'Draf',
 		pending_review: 'Menunggu Ulasan',
+		needs_revision: 'Perlu Revisi',
 		published: 'Terbit',
 		rejected: 'Ditolak',
 		archived: 'Diarsipkan'
@@ -62,10 +66,10 @@
 		<div class="lg:col-span-2 space-y-4">
 			<div class="panel-card p-5 space-y-4">
 				<div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-					{#each [['Format', data.story.format], ['Kategori', data.story.category], ['Bahasa', data.story.language], ['Genre', data.story.genre ?? '—']] as [k, v]}
+					{#each [['Format', data.story.formats.join(' + ')], ['Kategori', data.story.category], ['Bahasa', data.story.language], ['Genre', data.story.genre ?? '—']] as [k, v] (k)}
 						<div>
-							<dt class="label mb-0.5">{k}</dt>
-							<dd class="font-sans text-sm text-bark capitalize">{v}</dd>
+							<div class="label mb-0.5">{k}</div>
+							<div class="font-sans text-sm text-bark capitalize">{v}</div>
 						</div>
 					{/each}
 				</div>
@@ -88,17 +92,24 @@
 					</div>
 				{/if}
 
-				{#if data.story.embedUrl}
-					<div class="border-t border-kulit/20 pt-4">
-						<p class="label mb-2">URL Embed</p>
-						<a
-							href={data.story.embedUrl}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="font-mono text-xs text-cai hover:underline break-all"
-						>
-							{data.story.embedUrl}
-						</a>
+				{#if data.story.media.length > 0}
+					<div class="border-t border-kulit/20 pt-4 space-y-4">
+						<p class="label">Media Terlampir</p>
+						{#each data.story.media as entry, i (`${entry.kind}-${i}`)}
+							<div class="space-y-2">
+								<div class="flex flex-wrap items-center gap-2">
+									<span class="chip chip-teks">{MEDIA_KIND_LABELS[entry.kind]}</span>
+									<span class="font-mono text-xs text-bark/55">{mediaSourceLabel(entry)}</span>
+								</div>
+								<!--
+									The submitted URL is shown verbatim for review; the block below
+									already renders it and offers its own "open in new tab" link.
+								-->
+								<p class="font-mono text-xs text-cai break-all">{entry.url}</p>
+								<!-- Rendered inline so reviewers can verify the embed before approving. -->
+								<MediaBlock {entry} title={data.story.title} />
+							</div>
+						{/each}
 					</div>
 				{/if}
 
@@ -115,7 +126,7 @@
 				<div class="panel-card p-5">
 					<h2 class="heading text-base mb-4">Riwayat Ulasan</h2>
 					<ol class="space-y-3">
-						{#each data.reviews as rev}
+						{#each data.reviews as rev (rev.id)}
 							<li class="flex gap-3 items-start">
 								<span
 									class="mt-0.5 shrink-0 px-2 py-0.5 rounded text-xs font-medium {ACTION_CLASS[

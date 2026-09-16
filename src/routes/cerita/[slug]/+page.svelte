@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import AudioPlayer from '$lib/components/AudioPlayer.svelte';
 	import DongengCardHorizontal from '$lib/components/DongengCardHorizontal.svelte';
+	import { MediaBlock } from '$lib/components/media';
 	import ReactionBar from '$lib/components/ReactionBar.svelte';
 	import Avatar from '$lib/components/ui/Avatar.svelte';
 	import Badge from '$lib/components/ui/Badge.svelte';
 	import Chip from '$lib/components/ui/Chip.svelte';
+	import { MEDIA_BLOCK_LABELS } from '$lib/media';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -72,9 +73,11 @@
 				<span class="text-bark">{story.title}</span>
 			</nav>
 
-			<!-- Format chip + category -->
-			<div class="flex items-center gap-3 mb-4">
-				<Chip format={story.format} />
+			<!-- Format chips + category -->
+			<div class="flex flex-wrap items-center gap-3 mb-4">
+				{#each story.formats as fmt (fmt)}
+					<Chip format={fmt} />
+				{/each}
 				<span class="label">{categoryLabels[story.category] ?? story.category}</span>
 			</div>
 
@@ -128,30 +131,28 @@
 					</div>
 				{/if}
 
-				<!-- Audio player -->
-				{#if story.format === 'audio' && story.audioSrc}
-					<div class="mb-8">
-						<AudioPlayer src={story.audioSrc} title={story.title} transcript={story.transcript} />
-					</div>
-				{/if}
-
-				<!-- Video placeholder -->
-				{#if story.format === 'audiovisual'}
-					<div class="bg-night rounded-lg aspect-video flex items-center justify-center mb-8">
-						<div class="text-center text-cream/60">
-							<i class="i-ph-video-camera text-4xl mb-3" aria-hidden="true"></i>
-							<p class="font-sans text-sm">Video akan segera tersedia</p>
-						</div>
-					</div>
-				{/if}
-
 				<!-- Body text -->
-				{#if story.format === 'teks' && story.bodyText}
-					<div class="prose max-w-none">
-						{#each story.bodyText.split('\n\n') as paragraph (paragraph.id)}
-							{#if paragraph.trim()}
-								<p class="prose-body mb-5 text-bark/85">{paragraph.trim()}</p>
-							{/if}
+				{#if story.bodyText}
+					<section class="mb-10">
+						<p class="label text-tanah mb-3">BACA</p>
+						<div class="prose max-w-none">
+							{#each story.bodyText.split('\n\n') as paragraph, i (i)}
+								{#if paragraph.trim()}
+									<p class="prose-body mb-5 text-bark/85">{paragraph.trim()}</p>
+								{/if}
+							{/each}
+						</div>
+					</section>
+				{/if}
+
+				<!-- Embedded media: komik, audio, audiovisual -->
+				{#if story.media.length > 0}
+					<div class="space-y-10 mb-10">
+						{#each story.media as entry, i (`${entry.kind}-${i}`)}
+							<section>
+								<p class="label text-tanah mb-3">{MEDIA_BLOCK_LABELS[entry.kind]}</p>
+								<MediaBlock {entry} title={story.title} />
+							</section>
 						{/each}
 					</div>
 				{/if}
@@ -222,33 +223,33 @@
 				<div class="sticky top-24 space-y-6">
 					<div class="card p-5 space-y-4">
 						<h3 class="heading text-sm">Detail Cerita</h3>
-						<dl class="space-y-3">
+						<div class="space-y-3">
 							<div>
-								<dt class="label text-kulit mb-1">Bahasa</dt>
-								<dd class="font-sans text-sm text-bark">
+								<div class="label text-kulit mb-1">Bahasa</div>
+								<div class="font-sans text-sm text-bark">
 									{languageLabels[story.language] ?? story.language}
-								</dd>
+								</div>
 							</div>
 							<div>
-								<dt class="label text-kulit mb-1">Wilayah</dt>
-								<dd class="font-sans text-sm text-bark">
+								<div class="label text-kulit mb-1">Wilayah</div>
+								<div class="font-sans text-sm text-bark">
 									{regionLabels[story.region] ?? story.region}
-								</dd>
+								</div>
 							</div>
 							{#if story.tags?.length}
 								<div>
-									<dt class="label text-kulit mb-2">Tag</dt>
-									<dd class="flex flex-wrap gap-1.5">
-										{#each story.tags as tag (tag.id)}
+									<div class="label text-kulit mb-2">Tag</div>
+									<div class="flex flex-wrap gap-1.5">
+										{#each story.tags as tag, i (i)}
 											<a
 												href={resolve(`/cerita?q=${encodeURIComponent(tag)}`)}
 												class="chip chip-teks text-xs hover:bg-padi/30 transition-colors">{tag}</a
 											>
 										{/each}
-									</dd>
+									</div>
 								</div>
 							{/if}
-						</dl>
+						</div>
 					</div>
 				</div>
 			</aside>
@@ -259,7 +260,7 @@
 			<section class="mt-16 pt-12 border-t border-kulit/30">
 				<h2 class="heading text-xl mb-6">Cerita yang Mungkin Kamu Suka</h2>
 				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-					{#each related as relStory}
+					{#each related as relStory (relStory.id)}
 						<DongengCardHorizontal story={relStory} />
 					{/each}
 				</div>
@@ -273,6 +274,7 @@
 		</div>
 		<h1 class="heading text-2xl mb-3">Cerita tidak ditemukan.</h1>
 		<p class="prose-body text-bark/60 mb-6">Mungkin cerita ini sudah dipindah atau dihapus.</p>
-		<a href="/cerita" class="btn-primary btn-md inline-flex">← Kembali ke Semua Cerita</a>
+		<a href={resolve('/cerita')} class="btn-primary btn-md inline-flex">← Kembali ke Semua Cerita</a
+		>
 	</div>
 {/if}

@@ -39,7 +39,35 @@ export type DongengRegion =
 
 export type ContributorRole = 'tbm' | 'komunitas' | 'kurator' | 'individu';
 
-export type DongengStatus = 'draft' | 'pending_review' | 'published' | 'rejected' | 'archived';
+// ─── Media ───────────────────────────────────────────────────────────────────
+
+export type MediaKind = 'teks' | 'komik' | 'audio' | 'audiovisual';
+
+/** Komik is always an embedded document: a Drive PDF, a direct .pdf URL, or a Canva design. */
+export type KomikSource = 'gdrive' | 'pdf' | 'canva' | 'other';
+
+/** Audio is either an embeddable widget (iframe) or a direct file (native <audio>). */
+export type AudioSource = 'soundcloud' | 'spotify' | 'archive' | 'gdrive' | 'direct';
+
+/** Audiovisual is either an embeddable player (iframe) or a direct file (native <video>). */
+export type VideoSource = 'youtube' | 'vimeo' | 'gdrive' | 'direct' | 'other';
+
+/**
+ * One embedded medium attached to a story. A story may carry several at once.
+ * The `teks` body is NOT stored here — it lives in `stories.content`.
+ */
+export type StoryMedia =
+	| { kind: 'komik'; source: KomikSource; url: string }
+	| { kind: 'audio'; source: AudioSource; url: string; transcript?: string }
+	| { kind: 'audiovisual'; source: VideoSource; url: string; posterUrl?: string };
+
+export type DongengStatus =
+	| 'draft'
+	| 'pending_review'
+	| 'needs_revision'
+	| 'published'
+	| 'rejected'
+	| 'archived';
 
 export type UserRole = 'reader' | 'contributor' | 'admin' | 'superadmin';
 
@@ -61,7 +89,12 @@ export interface DongengStory {
 	title: string;
 	excerpt?: string;
 	coverUrl?: string;
+	/** Primary medium — the headline for cards and the dashboard/review tables. */
 	format: DongengFormat;
+	/** Every medium this story contains, in canonical order. Drives the format filter. */
+	formats: DongengFormat[];
+	/** Embedded media to render on the detail page, in canonical order. */
+	media: StoryMedia[];
 	category: DongengCategory;
 	genre: DongengGenre;
 	language: DongengLanguage;
@@ -75,16 +108,8 @@ export interface DongengStory {
 	moralMessage?: string;
 	// Rich content (for detail page)
 	bodyText?: string; // for teks format
-	audioSrc?: string; // for audio format
-	transcript?: string; // for audio/av
-	videoSrc?: string; // for audiovisual
-	videoPoster?: string; // for audiovisual
-	comicPages?: Array<{ url: string; alt?: string }>; // for komik
 	tags?: string[];
 	sourceRef?: string; // original source attribution
-	// Embed fields — used for komik and iframe-based media
-	embedUrl?: string;
-	embedProvider?: string;
 }
 
 // ─── UI State ─────────────────────────────────────────────────────────────────

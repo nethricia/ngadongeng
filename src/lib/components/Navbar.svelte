@@ -22,12 +22,13 @@
 		{ href: '/tentang', label: 'Tentang' }
 	];
 
-	const showContributorActions = $derived(
-		(($page.data.session?.user as { role?: string } | undefined)?.role ?? 'reader') !== 'reader'
+	const role = $derived(
+		($page.data.session?.user as { role?: string } | undefined)?.role ?? 'reader'
 	);
-	const showAdminLink = $derived(
-		($page.data.session?.user as { role?: string } | undefined)?.role === 'superadmin'
-	);
+	const showContributorActions = $derived(role !== 'reader');
+	const showAdminLink = $derived(role === 'superadmin');
+	// `panel.admin` is granted to both admin and superadmin (see $lib/server/rbac.ts).
+	const showReviewLink = $derived(role === 'admin' || role === 'superadmin');
 
 	function handleScroll() {
 		scrolled = window.scrollY > 20;
@@ -147,6 +148,14 @@
 										>
 											Dashboard
 										</a>
+										{#if showReviewLink}
+											<a
+												href={resolve('/ulasan')}
+												class="btn-soft btn-xs w-full justify-center text-xs leading-none"
+											>
+												Ulasan
+											</a>
+										{/if}
 										{#if showAdminLink}
 											<a
 												href={resolve('/admin')}
@@ -246,6 +255,17 @@
 						: 'text-bark hover:bg-parchment'}"
 				>
 					Dashboard
+				</a>
+			{/if}
+			{#if showReviewLink}
+				<a
+					href={resolve('/ulasan')}
+					class="font-sans font-medium py-3 px-4 rounded-md transition-colors no-underline
+                 {$page.url.pathname.startsWith('/ulasan')
+						? 'bg-tanah/10 text-tanah font-semibold'
+						: 'text-bark hover:bg-parchment'}"
+				>
+					Ulasan
 				</a>
 			{/if}
 			{#if showAdminLink}
