@@ -1,4 +1,10 @@
-import type { AudioSource, KomikSource, MediaKind, StoryMedia, VideoSource } from '$lib/types';
+import type {
+	AudioSource,
+	BukuCeritaBergambarSource,
+	MediaKind,
+	StoryMedia,
+	VideoSource
+} from '$lib/types';
 
 /**
  * Everything needed to turn a stored StoryMedia entry into something renderable.
@@ -11,7 +17,7 @@ import type { AudioSource, KomikSource, MediaKind, StoryMedia, VideoSource } fro
 
 // ─── Labels ──────────────────────────────────────────────────────────────────
 
-export const KOMIK_SOURCE_LABELS: Record<KomikSource, string> = {
+export const BUKU_CERITA_BERGAMBAR_SOURCE_LABELS: Record<BukuCeritaBergambarSource, string> = {
 	gdrive: 'Google Drive (PDF)',
 	pdf: 'Tautan PDF langsung',
 	canva: 'Canva',
@@ -36,25 +42,25 @@ export const VIDEO_SOURCE_LABELS: Record<VideoSource, string> = {
 
 export const MEDIA_KIND_LABELS: Record<MediaKind, string> = {
 	teks: 'Teks',
-	komik: 'Komik',
+	'buku-cerita-bergambar': 'Buku Cerita Bergambar',
 	audio: 'Audio',
 	audiovisual: 'Audiovisual'
 };
 
 /** Overline shown above each block on the story detail page. */
 export const MEDIA_BLOCK_LABELS: Record<Exclude<MediaKind, 'teks'>, string> = {
-	komik: 'KOMIK',
+	'buku-cerita-bergambar': 'BUKU CERITA BERGAMBAR',
 	audio: 'DENGARKAN',
 	audiovisual: 'TONTON'
 };
 
 /** Canonical render order for the media blocks. */
-export const MEDIA_ORDER: MediaKind[] = ['teks', 'komik', 'audio', 'audiovisual'];
+export const MEDIA_ORDER: MediaKind[] = ['teks', 'buku-cerita-bergambar', 'audio', 'audiovisual'];
 
 export function mediaSourceLabel(entry: StoryMedia): string {
 	switch (entry.kind) {
-		case 'komik':
-			return KOMIK_SOURCE_LABELS[entry.source];
+		case 'buku-cerita-bergambar':
+			return BUKU_CERITA_BERGAMBAR_SOURCE_LABELS[entry.source];
 		case 'audio':
 			return AUDIO_SOURCE_LABELS[entry.source];
 		case 'audiovisual':
@@ -206,7 +212,7 @@ export function resolveMedia(entry: StoryMedia): ResolvedMedia {
 	}
 
 	switch (entry.kind) {
-		case 'komik': {
+		case 'buku-cerita-bergambar': {
 			if (entry.source === 'pdf') {
 				return { render: 'iframe', src: entry.url, aspect: 'comic' };
 			}
@@ -287,7 +293,7 @@ export function validateMediaEntry(entry: StoryMedia): string | null {
 	}
 
 	switch (entry.kind) {
-		case 'komik':
+		case 'buku-cerita-bergambar':
 			if (entry.source === 'pdf' && !isDirectFile(entry.url, ['.pdf'])) {
 				return 'Tautan PDF langsung harus berakhiran .pdf.';
 			}
@@ -332,7 +338,9 @@ export function isStoryMedia(value: unknown): value is StoryMedia {
 	if (!value || typeof value !== 'object') return false;
 	const entry = value as { kind?: unknown; source?: unknown; url?: unknown };
 	return (
-		(entry.kind === 'komik' || entry.kind === 'audio' || entry.kind === 'audiovisual') &&
+		(entry.kind === 'buku-cerita-bergambar' ||
+			entry.kind === 'audio' ||
+			entry.kind === 'audiovisual') &&
 		typeof entry.source === 'string' &&
 		typeof entry.url === 'string'
 	);

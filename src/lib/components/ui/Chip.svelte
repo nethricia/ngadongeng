@@ -8,21 +8,21 @@
 
 	const labels: Record<DongengFormat, string> = {
 		teks: 'Teks',
-		komik: 'Komik',
+		'buku-cerita-bergambar': 'Buku Cerita Bergambar',
 		audio: 'Audio',
 		audiovisual: 'Audiovisual'
 	};
 
 	const icons: Record<DongengFormat, string> = {
 		teks: 'i-ph-book-open',
-		komik: 'i-ph-paint-brush',
+		'buku-cerita-bergambar': 'i-ph-paint-brush',
 		audio: 'i-ph-microphone',
 		audiovisual: 'i-ph-video-camera'
 	};
 
 	const chipClass: Record<DongengFormat, string> = {
 		teks: 'chip-teks',
-		komik: 'chip-komik',
+		'buku-cerita-bergambar': 'chip-buku-cerita-bergambar',
 		audio: 'chip-audio',
 		audiovisual: 'chip-av'
 	};

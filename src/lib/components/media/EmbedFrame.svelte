@@ -9,7 +9,7 @@
 
 	let { src, title, aspect = 'video' }: Props = $props();
 
-	// Komik needs vertical room to read a scrollable document; the audio widgets
+	// Buku cerita bergambar needs vertical room to read a scrollable document; the audio widgets
 	// have a fixed 166px height of their own; video keeps its native 16:9.
 	const aspectClass: Record<EmbedAspect, string> = {
 		video: 'aspect-video',

@@ -3,21 +3,26 @@
 	import { MediaBlock } from '$lib/components/media';
 	import {
 		isHttpUrl,
-		KOMIK_SOURCE_LABELS,
+		BUKU_CERITA_BERGAMBAR_SOURCE_LABELS,
 		AUDIO_SOURCE_LABELS,
 		VIDEO_SOURCE_LABELS
 	} from '$lib/media';
-	import type { AudioSource, KomikSource, StoryMedia, VideoSource } from '$lib/types';
+	import type { AudioSource, BukuCeritaBergambarSource, StoryMedia, VideoSource } from '$lib/types';
 	import type { ActionData } from './$types';
 
 	let { form }: { form: ActionData } = $props();
 
 	// Each block is optional; the server derives the story's primary format from
 	// whichever blocks are filled in.
-	let enabled = $state({ teks: true, komik: false, audio: false, audiovisual: false });
+	let enabled = $state({
+		teks: true,
+		bukuCeritaBergambar: false,
+		audio: false,
+		audiovisual: false
+	});
 
-	let komikSource = $state<KomikSource>('gdrive');
-	let komikUrl = $state('');
+	let bukuCeritaBergambarSource = $state<BukuCeritaBergambarSource>('gdrive');
+	let bukuCeritaBergambarUrl = $state('');
 	let audioSource = $state<AudioSource>('soundcloud');
 	let audioUrl = $state('');
 	let videoSource = $state<VideoSource>('youtube');
@@ -49,17 +54,19 @@
 		{ value: 'indonesia', label: 'Indonesia' },
 		{ value: 'sunda-indonesia', label: 'Sunda & Indonesia' }
 	];
-	const KOMIK_SOURCE_OPTIONS = Object.entries(KOMIK_SOURCE_LABELS);
+	const BUKU_CERITA_BERGAMBAR_SOURCE_OPTIONS = Object.entries(BUKU_CERITA_BERGAMBAR_SOURCE_LABELS);
 	const AUDIO_SOURCE_OPTIONS = Object.entries(AUDIO_SOURCE_LABELS);
 	const VIDEO_SOURCE_OPTIONS = Object.entries(VIDEO_SOURCE_LABELS);
 
 	/** Guidance under each URL field, so contributors paste the right link shape. */
 	const HINTS: Record<string, string> = {
-		'komik:gdrive':
+		'buku-cerita-bergambar:gdrive':
 			'Tempel tautan bagikan berkas PDF dari Google Drive. Pastikan aksesnya "siapa saja yang memiliki tautan".',
-		'komik:pdf': 'Tautan langsung ke berkas .pdf, misalnya https://situs.contoh/komik.pdf',
-		'komik:canva': 'Tempel tautan desain Canva yang sudah dibagikan untuk dilihat publik.',
-		'komik:other': 'Tautan dokumen lain yang dapat ditampilkan di dalam halaman.',
+		'buku-cerita-bergambar:pdf':
+			'Tautan langsung ke berkas .pdf, misalnya https://situs.contoh/buku-cerita-bergambar.pdf',
+		'buku-cerita-bergambar:canva':
+			'Tempel tautan desain Canva yang sudah dibagikan untuk dilihat publik.',
+		'buku-cerita-bergambar:other': 'Tautan dokumen lain yang dapat ditampilkan di dalam halaman.',
 		'audio:soundcloud': 'Tempel tautan trek SoundCloud.',
 		'audio:spotify': 'Tempel tautan episode atau trek Spotify.',
 		'audio:archive': 'Tempel tautan item Archive.org (…/details/…).',
@@ -74,8 +81,14 @@
 	};
 
 	// Live previews — contributors can confirm a link actually embeds before submitting.
-	let komikPreview = $derived<StoryMedia | null>(
-		isHttpUrl(komikUrl) ? { kind: 'komik', source: komikSource, url: komikUrl.trim() } : null
+	let bukuCeritaBergambarPreview = $derived<StoryMedia | null>(
+		isHttpUrl(bukuCeritaBergambarUrl)
+			? {
+					kind: 'buku-cerita-bergambar',
+					source: bukuCeritaBergambarSource,
+					url: bukuCeritaBergambarUrl.trim()
+				}
+			: null
 	);
 	let audioPreview = $derived<StoryMedia | null>(
 		isHttpUrl(audioUrl) ? { kind: 'audio', source: audioSource, url: audioUrl.trim() } : null
@@ -224,48 +237,59 @@
 				</div>
 			</div>
 
-			<!-- Komik -->
+			<!-- Buku cerita bergambar -->
 			<div class="border border-kulit/40 rounded-lg p-4 space-y-3">
 				<label class="flex items-center gap-2 cursor-pointer">
 					<input
 						type="checkbox"
-						name="komik_enabled"
-						bind:checked={enabled.komik}
+						name="buku_cerita_bergambar_enabled"
+						bind:checked={enabled.bukuCeritaBergambar}
 						class="w-4 h-4 accent-tanah"
 					/>
 					<i class="i-ph-paint-brush text-tanah" aria-hidden="true"></i>
-					<span class="font-sans font-semibold text-sm text-bark">Komik (dokumen)</span>
+					<span class="font-sans font-semibold text-sm text-bark"
+						>Buku Cerita Bergambar (dokumen)</span
+					>
 				</label>
-				<div class:hidden={!enabled.komik} class="space-y-4">
+				<div class:hidden={!enabled.bukuCeritaBergambar} class="space-y-4">
 					<div class="space-y-1.5">
-						<label for="komik_source" class="block text-sm font-semibold text-bark">Sumber</label>
+						<label for="buku_cerita_bergambar_source" class="block text-sm font-semibold text-bark"
+							>Sumber</label
+						>
 						<select
-							id="komik_source"
-							name="komik_source"
-							bind:value={komikSource}
+							id="buku_cerita_bergambar_source"
+							name="buku_cerita_bergambar_source"
+							bind:value={bukuCeritaBergambarSource}
 							class="input-base"
 						>
-							{#each KOMIK_SOURCE_OPTIONS as [value, label] (value)}
+							{#each BUKU_CERITA_BERGAMBAR_SOURCE_OPTIONS as [value, label] (value)}
 								<option {value}>{label}</option>
 							{/each}
 						</select>
 					</div>
 					<div class="space-y-1.5">
-						<label for="komik_url" class="block text-sm font-semibold text-bark">URL Komik</label>
+						<label for="buku_cerita_bergambar_url" class="block text-sm font-semibold text-bark"
+							>URL Buku Cerita Bergambar</label
+						>
 						<input
-							id="komik_url"
-							name="komik_url"
+							id="buku_cerita_bergambar_url"
+							name="buku_cerita_bergambar_url"
 							type="url"
-							bind:value={komikUrl}
+							bind:value={bukuCeritaBergambarUrl}
 							placeholder="https://..."
 							class="input-base"
 						/>
-						<p class="font-mono text-xs text-bark/50 mt-1">{HINTS[`komik:${komikSource}`]}</p>
+						<p class="font-mono text-xs text-bark/50 mt-1">
+							{HINTS[`buku-cerita-bergambar:${bukuCeritaBergambarSource}`]}
+						</p>
 					</div>
-					{#if komikPreview}
+					{#if bukuCeritaBergambarPreview}
 						<div class="space-y-2">
 							<p class="label">Pratinjau</p>
-							<MediaBlock entry={komikPreview} title="Pratinjau komik" />
+							<MediaBlock
+								entry={bukuCeritaBergambarPreview}
+								title="Pratinjau buku cerita bergambar"
+							/>
 						</div>
 					{/if}
 				</div>

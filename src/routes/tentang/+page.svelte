@@ -111,8 +111,9 @@
 				yang ingat cerita yang pernah diceritakan neneknya.
 			</p>
 			<p class="mt-4">
-				Kontribusi bisa berupa tulisan, gambar komik, rekaman suara, atau video. Tidak ada standar
-				produksi minimum — yang penting adalah niat untuk menjaga agar cerita itu tidak hilang.
+				Kontribusi bisa berupa tulisan, buku cerita bergambar, rekaman suara, atau video. Tidak ada
+				standar produksi minimum — yang penting adalah niat untuk menjaga agar cerita itu tidak
+				hilang.
 			</p>
 			<div class="mt-6">
 				<a href={resolve('/kontribusi')} class="btn-primary btn-md inline-flex"
@@ -169,7 +170,7 @@
 			<p>
 				TBM ini memiliki koleksi lebih dari 211 judul dan 514 eksemplar yang berfokus pada literasi
 				anak dengan tema budaya Sunda. Koleksinya meliputi buku cerita bergambar, novel, cerita
-				pendek, komik, dan buku nonfiksi — termasuk buku klasik Sunda seperti
+				pendek, dan buku nonfiksi — termasuk buku klasik Sunda seperti
 				<em>Roesdi djeung Misnem</em>.
 			</p>
 		</div>

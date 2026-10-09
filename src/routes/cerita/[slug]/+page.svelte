@@ -145,7 +145,7 @@
 					</section>
 				{/if}
 
-				<!-- Embedded media: komik, audio, audiovisual -->
+				<!-- Embedded media: buku cerita bergambar, audio, audiovisual -->
 				{#if story.media.length > 0}
 					<div class="space-y-10 mb-10">
 						{#each story.media as entry, i (`${entry.kind}-${i}`)}

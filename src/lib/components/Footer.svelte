@@ -22,7 +22,7 @@
 		<div>
 			<h3 class="label text-cream/40 mb-4">Jelajahi</h3>
 			<ul class="space-y-2 text-sm">
-				{#each [['/', 'Beranda'], ['/cerita', 'Semua Cerita'], ['/cerita?format=teks', 'Cerita Teks'], ['/cerita?format=komik', 'Komik'], ['/cerita?format=audio', 'Audio'], ['/cerita?format=audiovisual', 'Audiovisual']] as [href, label]}
+				{#each [['/', 'Beranda'], ['/cerita', 'Semua Cerita'], ['/cerita?format=teks', 'Cerita Teks'], ['/cerita?format=buku-cerita-bergambar', 'Buku Cerita Bergambar'], ['/cerita?format=audio', 'Audio'], ['/cerita?format=audiovisual', 'Audiovisual']] as [href, label]}
 					<li>
 						<a {href} class="text-cream/60 hover:text-cream transition-colors no-underline"
 							>{label}</a

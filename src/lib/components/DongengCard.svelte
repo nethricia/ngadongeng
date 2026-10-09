@@ -26,7 +26,7 @@
 	// Cover fallback gradients by format
 	const fallbackGradients: Record<string, string> = {
 		teks: 'from-parchment to-kulit/40',
-		komik: 'from-tanah/20 to-parchment',
+		'buku-cerita-bergambar': 'from-tanah/20 to-parchment',
 		audio: 'from-cai/20 to-parchment',
 		audiovisual: 'from-night/80 to-cai-dark/60'
 	};

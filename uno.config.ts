@@ -148,7 +148,7 @@ export default defineConfig({
 		// Tags / chips
 		chip: 'inline-flex items-center gap-1 px-2.5 py-1 rounded-sm font-mono text-xs uppercase tracking-widest',
 		'chip-teks': 'chip bg-padi/20 text-bark',
-		'chip-komik': 'chip bg-tanah/15 text-tanah-dark',
+		'chip-buku-cerita-bergambar': 'chip bg-tanah/15 text-tanah-dark',
 		'chip-audio': 'chip bg-cai/15 text-cai-dark',
 		'chip-av': 'chip bg-night text-padi',
 

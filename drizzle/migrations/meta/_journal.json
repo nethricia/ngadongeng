@@ -15,6 +15,13 @@
       "when": 1789561313385,
       "tag": "0001_lethal_la_nuit",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1791527964025,
+      "tag": "0002_rename_komik_ke_buku_cerita_bergambar",
+      "breakpoints": true
     }
   ]
 }

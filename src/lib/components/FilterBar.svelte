@@ -18,7 +18,7 @@
 	const formats = [
 		{ value: 'semua', label: 'Semua' },
 		{ value: 'teks', label: 'Teks' },
-		{ value: 'komik', label: 'Komik' },
+		{ value: 'buku-cerita-bergambar', label: 'Buku Cerita Bergambar' },
 		{ value: 'audio', label: 'Audio' },
 		{ value: 'audiovisual', label: 'Audiovisual' }
 	];

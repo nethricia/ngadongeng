@@ -21,8 +21,8 @@
 			count: 5
 		},
 		{
-			format: 'komik',
-			label: 'Komik & Bergambar',
+			format: 'buku-cerita-bergambar',
+			label: 'Buku Cerita Bergambar',
 			description: 'Nikmati cerita rakyat lewat gambar. Cocok untuk anak-anak dan pembaca visual.',
 			icon: 'i-ph-paint-brush',
 			count: 2

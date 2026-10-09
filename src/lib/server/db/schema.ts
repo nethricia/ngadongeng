@@ -92,9 +92,9 @@ export const contributors = sqliteTable('contributors', {
 // STORIES
 // A story carries one or more media. `content` holds the
 // written (teks) body; `media` holds every embedded medium:
-//   komik       — PDF document embedded via Drive, a direct .pdf URL, or Canva
-//   audio       — SoundCloud/Spotify/Archive.org/Drive widget, or a direct audio file
-//   audiovisual — YouTube/Vimeo/Drive player, or a direct video file
+//   buku-cerita-bergambar — PDF document embedded via Drive, a direct .pdf URL, or Canva
+//   audio                 — SoundCloud/Spotify/Archive.org/Drive widget, or a direct audio file
+//   audiovisual           — YouTube/Vimeo/Drive player, or a direct video file
 //
 // No binary assets are stored here; all media is referenced
 // by external URL.
@@ -119,7 +119,9 @@ export const stories = sqliteTable('stories', {
 	tags: text('tags'),
 
 	// ── Classification ───────────────────────────────────────
-	format: text('format', { enum: ['teks', 'komik', 'audio', 'audiovisual'] }).notNull(),
+	format: text('format', {
+		enum: ['teks', 'buku-cerita-bergambar', 'audio', 'audiovisual']
+	}).notNull(),
 	category: text('category', {
 		enum: ['binatang', 'dewa-dewi', 'manusia', 'asal-usul', 'sejarah', 'jenaka', 'legenda']
 	}).notNull(),
@@ -146,7 +148,7 @@ export const stories = sqliteTable('stories', {
 	contentType: text('content_type', { enum: ['markdown', 'html'] }).default('markdown'),
 	content: text('content'),
 
-	// ── Embedded media (komik / audio / audiovisual) ─────────
+	// ── Embedded media (buku-cerita-bergambar / audio / audiovisual) ─────────
 	// JSON-encoded StoryMedia[]: '[{"kind":"audio","source":"soundcloud","url":"..."}]'
 	// A story may carry several; rendering order is the array order.
 	media: text('media', { mode: 'json' }).$type<StoryMedia[]>(),

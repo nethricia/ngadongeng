@@ -256,7 +256,7 @@ The page is divided into five structural zones:
   Curated by TBM editors
 
 [Category Showcase]
-  4 large tiles: Cerita Teks / Komik / Audio / Audiovisual
+  4 large tiles: Cerita Teks / Buku Cerita Bergambar / Audio / Audiovisual
   Each with illustrated icon and count badge
 
 [Community Voices]
@@ -275,7 +275,7 @@ The page is divided into five structural zones:
 
 ```
 [Filter Bar]
-  Category tabs (All / Teks / Komik / Audio / Audiovisual)
+  Category tabs (All / Teks / Buku Cerita Bergambar / Audio / Audiovisual)
   Sort: Terbaru / Terpopuler / A–Z
   Search input
 
@@ -460,12 +460,12 @@ letter-spacing: 0.08em;
 
 **Per-category color:**
 
-| Category    | Background           | Text                 |
-| ----------- | -------------------- | -------------------- |
-| Teks        | `hsl(42, 40%, 88%)`  | `--color-bark`       |
-| Komik       | `hsl(22, 50%, 88%)`  | `--color-tanah-dark` |
-| Audio       | `hsl(224, 30%, 88%)` | `--color-cai-dark`   |
-| Audiovisual | `hsl(28, 30%, 20%)`  | `--color-padi`       |
+| Category              | Background           | Text                 |
+| --------------------- | -------------------- | -------------------- |
+| Teks                  | `hsl(42, 40%, 88%)`  | `--color-bark`       |
+| Buku Cerita Bergambar | `hsl(22, 50%, 88%)`  | `--color-tanah-dark` |
+| Audio                 | `hsl(224, 30%, 88%)` | `--color-cai-dark`   |
+| Audiovisual           | `hsl(28, 30%, 20%)`  | `--color-padi`       |
 
 ---
 
@@ -733,12 +733,12 @@ Understanding this helps design the filtering, tagging, and navigation systems.
 
 ### 12.1 Format Types
 
-| ID            | Label       | Icon | Description                        |
-| ------------- | ----------- | ---- | ---------------------------------- |
-| `teks`        | Cerita Teks | 📖   | Written prose or poetry            |
-| `komik`       | Komik       | 🎨   | Sequential art / illustrated story |
-| `audio`       | Audio       | 🎙   | Narrated recording, podcast-style  |
-| `audiovisual` | Audiovisual | 🎬   | Video, animation, or film          |
+| ID                      | Label                 | Icon | Description                        |
+| ----------------------- | --------------------- | ---- | ---------------------------------- |
+| `teks`                  | Cerita Teks           | 📖   | Written prose or poetry            |
+| `buku-cerita-bergambar` | Buku Cerita Bergambar | 🎨   | Sequential art / illustrated story |
+| `audio`                 | Audio                 | 🎙   | Narrated recording, podcast-style  |
+| `audiovisual`           | Audiovisual           | 🎬   | Video, animation, or film          |
 
 ### 12.2 Story Origin Tags
 
@@ -802,7 +802,7 @@ panel-card    → authenticated panel surfaces (rounded-xl, kulit/30 border)
 status-draft / status-pending / status-published / status-rejected / status-archived
 
 # Category chips
-chip-teks / chip-komik / chip-audio / chip-av
+chip-teks / chip-buku-cerita-bergambar / chip-audio / chip-av
 
 # Typography
 heading       → font-display font-bold text-bark

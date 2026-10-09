@@ -3,7 +3,7 @@ import { requireDb, requirePermission } from '$lib/server/auth-guard';
 import { schema } from '$lib/server/db';
 import type { NewStory } from '$lib/server/db/schema';
 import { slugify } from '$lib/server/mappers';
-import type { AudioSource, KomikSource, StoryMedia, VideoSource } from '$lib/types';
+import type { AudioSource, BukuCeritaBergambarSource, StoryMedia, VideoSource } from '$lib/types';
 import { fail, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import type { Actions, PageServerLoad } from './$types';
@@ -13,7 +13,12 @@ export const load: PageServerLoad = async ({ locals }) => {
 	return {};
 };
 
-const KOMIK_SOURCES: KomikSource[] = ['gdrive', 'pdf', 'canva', 'other'];
+const BUKU_CERITA_BERGAMBAR_SOURCES: BukuCeritaBergambarSource[] = [
+	'gdrive',
+	'pdf',
+	'canva',
+	'other'
+];
 const AUDIO_SOURCES: AudioSource[] = ['soundcloud', 'spotify', 'archive', 'gdrive', 'direct'];
 const VIDEO_SOURCES: VideoSource[] = ['youtube', 'vimeo', 'gdrive', 'direct', 'other'];
 
@@ -51,17 +56,22 @@ export const actions: Actions = {
 		// carry a link that we can actually render.
 		const media: StoryMedia[] = [];
 
-		if (on('komik_enabled')) {
-			const url = str('komik_url');
-			if (!url) return fail(400, { error: 'Blok Komik dicentang tetapi URL-nya kosong.' });
+		if (on('buku_cerita_bergambar_enabled')) {
+			const url = str('buku_cerita_bergambar_url');
+			if (!url)
+				return fail(400, { error: 'Blok Buku Cerita Bergambar dicentang tetapi URL-nya kosong.' });
 
 			const entry: StoryMedia = {
-				kind: 'komik',
-				source: pickSource(str('komik_source'), KOMIK_SOURCES, 'gdrive'),
+				kind: 'buku-cerita-bergambar',
+				source: pickSource(
+					str('buku_cerita_bergambar_source'),
+					BUKU_CERITA_BERGAMBAR_SOURCES,
+					'gdrive'
+				),
 				url
 			};
 			const invalid = validateMediaEntry(entry);
-			if (invalid) return fail(400, { error: `Komik: ${invalid}` });
+			if (invalid) return fail(400, { error: `Buku Cerita Bergambar: ${invalid}` });
 			media.push(entry);
 		}
 
@@ -100,7 +110,8 @@ export const actions: Actions = {
 		const hasText = content.trim().length > 0;
 		if (!hasText && media.length === 0) {
 			return fail(400, {
-				error: 'Isi minimal satu format konten: teks, komik, audio, atau audiovisual.'
+				error:
+					'Isi minimal satu format konten: teks, buku cerita bergambar, audio, atau audiovisual.'
 			});
 		}
 

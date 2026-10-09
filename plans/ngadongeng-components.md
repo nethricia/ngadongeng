@@ -73,18 +73,18 @@ loading          → [spinner icon replaces icon-left slot]
 
 ```ts
 interface Props {
-	format: 'teks' | 'komik' | 'audio' | 'audiovisual';
+	format: 'teks' | 'buku-cerita-bergambar' | 'audio' | 'audiovisual';
 	label?: string; // overrides default format label
 }
 ```
 
-**Format label defaults:** `teks → Teks`, `komik → Komik`, `audio → Audio`, `audiovisual → Audiovisual`
+**Format label defaults:** `teks → Teks`, `buku-cerita-bergambar → Buku Cerita Bergambar`, `audio → Audio`, `audiovisual → Audiovisual`
 
 **UnoCSS classes:**
 
 ```
 teks        → chip-teks
-komik       → chip-komik
+buku-cerita-bergambar       → chip-buku-cerita-bergambar
 audio       → chip-audio
 audiovisual → chip-av
 ```
@@ -372,9 +372,9 @@ interface DongengCardProps {
 	title: string;
 	excerpt?: string;
 	coverUrl?: string; // fallback: generated gradient by format type
-	format: 'teks' | 'komik' | 'audio' | 'audiovisual';
+	format: 'teks' | 'buku-cerita-bergambar' | 'audio' | 'audiovisual';
 	category: 'binatang' | 'dewa-dewi' | 'manusia' | 'asal-usul';
-	duration?: string; // e.g. '12 menit' for audio, '8 halaman' for komik
+	duration?: string; // e.g. '12 menit' for audio, '8 halaman' for buku-cerita-bergambar
 	author: {
 		name: string;
 		avatarUrl?: string;
@@ -438,7 +438,7 @@ interface DongengCardProps {
 ```ts
 const fallbacks = {
 	teks: 'from-parchment to-kulit/40',
-	komik: 'from-tanah/20 to-parchment',
+	buku-cerita-bergambar: 'from-tanah/20 to-parchment',
 	audio: 'from-cai/20 to-parchment',
 	audiovisual: 'from-night/80 to-cai-dark/60'
 };
@@ -674,7 +674,7 @@ interface Props {
       <ul class="space-y-2 text-sm">
         <li><a href="/cerita">Semua Cerita</a></li>
         <li><a href="/cerita?format=teks">Cerita Teks</a></li>
-        <li><a href="/cerita?format=komik">Komik</a></li>
+        <li><a href="/cerita?format=buku-cerita-bergambar">Buku Cerita Bergambar</a></li>
         <li><a href="/cerita?format=audio">Audio</a></li>
         <li><a href="/cerita?format=audiovisual">Audiovisual</a></li>
       </ul>
@@ -756,7 +756,7 @@ Used on the `/cerita` archive page.
 
 ```ts
 interface Props {
-	activeFormat?: string; // 'semua' | 'teks' | 'komik' | 'audio' | 'audiovisual'
+	activeFormat?: string; // 'semua' | 'teks' | 'buku-cerita-bergambar' | 'audio' | 'audiovisual'
 	activeSort?: string; // 'terbaru' | 'terpopuler' | 'az'
 	activeCategory?: string; // 'semua' | 'binatang' | 'dewa-dewi' | 'manusia' | 'asal-usul'
 }
@@ -856,7 +856,7 @@ Multi-step form for submitting a new dongeng. Manages its own step state.
 ```
 Step 1 — Informasi Dasar
   - Input: Judul Dongeng (required)
-  - Select: Format (Teks / Komik / Audio / Audiovisual)
+  - Select: Format (Teks / Buku Cerita Bergambar / Audio / Audiovisual)
   - Select: Kategori (Binatang / Dewa-Dewi / Manusia / Asal-Usul Tempat)
   - Select: Bahasa (Bahasa Sunda / Sunda Buhun / Indonesia / Dwibahasa)
   - Select: Tatar/Wilayah (dropdown of Tatar Sunda regions)
@@ -864,7 +864,7 @@ Step 1 — Informasi Dasar
 
 Step 2 — Konten Utama
   IF format=teks:    Textarea (rich text, markdown-rendered)
-  IF format=komik:   FileUpload (image/*, multiple, max 20 files)
+  IF format=buku-cerita-bergambar:   FileUpload (image/*, multiple, max 20 files)
   IF format=audio:   FileUpload (audio/*, single) + Textarea (transkrip)
   IF format=av:      FileUpload (video/*, single) + FileUpload (subtitle .vtt, optional)
 
@@ -919,7 +919,7 @@ Full-bleed landing hero.
       Yuk, Ngadongeng.
     </h1>
     <p class="prose-body text-md text-bark/70 max-w-xl mb-10">
-      Kumpulan dongeng dan cerita rakyat Sunda — dalam teks, komik, audio, dan video.
+      Kumpulan dongeng dan cerita rakyat Sunda — dalam teks, buku-cerita-bergambar, audio, dan video.
       Dibuka untuk semua yang ingin berbagi cerita.
     </p>
     <div class="flex flex-wrap gap-4">

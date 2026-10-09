@@ -41,8 +41,8 @@
 
 		<!-- Subheading -->
 		<p class="prose-body text-md text-bark/70 max-w-xl mb-10 leading-relaxed">
-			Temukan kumpulan dongeng dan cerita rakyat Sunda — dalam teks, komik, rekaman suara, dan
-			video. Dari Tatar Sunda untuk semua yang ingin mengenal dan berbagi cerita.
+			Temukan kumpulan dongeng dan cerita rakyat Sunda — dalam teks, buku cerita bergambar, rekaman
+			suara, dan video. Dari Tatar Sunda untuk semua yang ingin mengenal dan berbagi cerita.
 		</p>
 
 		<!-- CTAs -->

@@ -1,6 +1,6 @@
 // ─── Content Taxonomy ────────────────────────────────────────────────────────
 
-export type DongengFormat = 'teks' | 'komik' | 'audio' | 'audiovisual';
+export type DongengFormat = 'teks' | 'buku-cerita-bergambar' | 'audio' | 'audiovisual';
 
 export type DongengCategory =
 	| 'binatang'
@@ -41,10 +41,10 @@ export type ContributorRole = 'tbm' | 'komunitas' | 'kurator' | 'individu';
 
 // ─── Media ───────────────────────────────────────────────────────────────────
 
-export type MediaKind = 'teks' | 'komik' | 'audio' | 'audiovisual';
+export type MediaKind = 'teks' | 'buku-cerita-bergambar' | 'audio' | 'audiovisual';
 
-/** Komik is always an embedded document: a Drive PDF, a direct .pdf URL, or a Canva design. */
-export type KomikSource = 'gdrive' | 'pdf' | 'canva' | 'other';
+/** Buku cerita bergambar is always an embedded document: a Drive PDF, a direct .pdf URL, or a Canva design. */
+export type BukuCeritaBergambarSource = 'gdrive' | 'pdf' | 'canva' | 'other';
 
 /** Audio is either an embeddable widget (iframe) or a direct file (native <audio>). */
 export type AudioSource = 'soundcloud' | 'spotify' | 'archive' | 'gdrive' | 'direct';
@@ -57,7 +57,7 @@ export type VideoSource = 'youtube' | 'vimeo' | 'gdrive' | 'direct' | 'other';
  * The `teks` body is NOT stored here — it lives in `stories.content`.
  */
 export type StoryMedia =
-	| { kind: 'komik'; source: KomikSource; url: string }
+	| { kind: 'buku-cerita-bergambar'; source: BukuCeritaBergambarSource; url: string }
 	| { kind: 'audio'; source: AudioSource; url: string; transcript?: string }
 	| { kind: 'audiovisual'; source: VideoSource; url: string; posterUrl?: string };
 

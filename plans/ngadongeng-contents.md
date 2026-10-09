@@ -26,7 +26,7 @@
 
 ```
 Ngadongeng adalah platform arsip dan komunitas untuk dongeng dan cerita rakyat Sunda.
-Temukan ribuan cerita dalam format teks, komik, audio, dan video — atau bagikan ceritamu sendiri.
+Temukan ribuan cerita dalam format teks, buku-cerita-bergambar, audio, dan video — atau bagikan ceritamu sendiri.
 Dikelola oleh TBM Pabukon Ngadongeng, Sumedang.
 ```
 
@@ -58,7 +58,7 @@ Yuk, Ngadongeng.
 **Subheading:**
 
 ```
-Temukan kumpulan dongeng dan cerita rakyat Sunda — dalam teks, komik, rekaman suara,
+Temukan kumpulan dongeng dan cerita rakyat Sunda — dalam teks, buku-cerita-bergambar, rekaman suara,
 dan video. Dari Tatar Sunda untuk semua yang ingin mengenal dan berbagi cerita.
 ```
 
@@ -120,12 +120,12 @@ Pilih Cara Kamu Menikmati Dongeng
 
 **Four category tiles:**
 
-| Format      | Icon | Heading               | Description                                                                                        |
-| ----------- | ---- | --------------------- | -------------------------------------------------------------------------------------------------- |
-| Teks        | 📖   | **Cerita Teks**       | Baca dongeng dalam bahasa Sunda atau Indonesia. Cocok untuk yang suka membaca sambil membayangkan. |
-| Komik       | 🎨   | **Komik & Bergambar** | Nikmati cerita rakyat lewat gambar. Cocok untuk anak-anak dan pembaca visual.                      |
-| Audio       | 🎙   | **Audio & Rekaman**   | Dengarkan dongeng yang disampaikan langsung. Seperti duduk di sebelah si pencerita.                |
-| Audiovisual | 🎬   | **Video & Animasi**   | Tonton cerita rakyat dalam format flipbook, animasi, atau video dokumenter.                        |
+| Format                | Icon | Heading                   | Description                                                                                        |
+| --------------------- | ---- | ------------------------- | -------------------------------------------------------------------------------------------------- |
+| Teks                  | 📖   | **Cerita Teks**           | Baca dongeng dalam bahasa Sunda atau Indonesia. Cocok untuk yang suka membaca sambil membayangkan. |
+| Buku Cerita Bergambar | 🎨   | **Buku Cerita Bergambar** | Nikmati cerita rakyat lewat gambar. Cocok untuk anak-anak dan pembaca visual.                      |
+| Audio                 | 🎙   | **Audio & Rekaman**       | Dengarkan dongeng yang disampaikan langsung. Seperti duduk di sebelah si pencerita.                |
+| Audiovisual           | 🎬   | **Video & Animasi**       | Tonton cerita rakyat dalam format flipbook, animasi, atau video dokumenter.                        |
 
 ---
 
@@ -273,7 +273,7 @@ Body: Jelajahi koleksi dongeng dan cerita rakyat Sunda dari berbagai format dan 
 ### 3.2 Filter Labels
 
 ```
-Format:    Semua · Teks · Komik · Audio · Audiovisual
+Format:    Semua · Teks · Buku Cerita Bergambar · Audio · Audiovisual
 Kategori:  Semua Kategori · Binatang · Dewa-Dewi · Manusia · Asal-Usul Tempat
 Bahasa:    Semua Bahasa · Bahasa Sunda · Sunda Buhun · Indonesia · Dwibahasa
 Urutkan:   Terbaru · Terpopuler · A–Z
@@ -357,12 +357,12 @@ Login nudge: Masuk untuk ikut berdiskusi →
 
 ### 5.1 Format Types
 
-| value         | Label (ID)  | Label (SU)      | Icon | Description                                   |
-| ------------- | ----------- | --------------- | ---- | --------------------------------------------- |
-| `teks`        | Cerita Teks | Carpon / Prosa  | 📖   | Narasi tertulis, cerita pendek, puisi naratif |
-| `komik`       | Komik       | Komik Sunda     | 🎨   | Cerita bergambar sekuensial                   |
-| `audio`       | Audio       | Ngadongeng Sora | 🎙   | Rekaman suara: dongeng lisan, podcast cerita  |
-| `audiovisual` | Audiovisual | Video Dongeng   | 🎬   | Video, flipbook digital, animasi, dokumenter  |
+| value                   | Label (ID)            | Label (SU)                  | Icon | Description                                   |
+| ----------------------- | --------------------- | --------------------------- | ---- | --------------------------------------------- |
+| `teks`                  | Cerita Teks           | Carpon / Prosa              | 📖   | Narasi tertulis, cerita pendek, puisi naratif |
+| `buku-cerita-bergambar` | Buku Cerita Bergambar | Buku Cerita Bergambar Sunda | 🎨   | Cerita bergambar sekuensial                   |
+| `audio`                 | Audio                 | Ngadongeng Sora             | 🎙   | Rekaman suara: dongeng lisan, podcast cerita  |
+| `audiovisual`           | Audiovisual           | Video Dongeng               | 🎬   | Video, flipbook digital, animasi, dokumenter  |
 
 ### 5.2 Story Categories (from original ngadongeng.com)
 
@@ -538,7 +538,7 @@ pahlawan sejati Tatar Sunda.
 
 ### Story 07 — Sasakala Situ Bagendit
 
-**Format:** Teks + Komik
+**Format:** Teks + Buku Cerita Bergambar
 **Kategori:** Asal-Usul Tempat
 **Genre:** Legenda
 **Bahasa:** Bahasa Indonesia
@@ -599,7 +599,7 @@ yang tidak menghormatinya.
 
 ### Story 10 — Kancil dan Buaya
 
-**Format:** Komik
+**Format:** Buku Cerita Bergambar
 **Kategori:** Dongeng Tokoh Binatang
 **Genre:** Fabel
 **Bahasa:** Bahasa Indonesia (adaptasi Sunda)
@@ -720,7 +720,7 @@ cerita, tapi juga mengundang komunitas untuk terus mengisi dan merawatnya.
 Siapa pun. Guru, pelajar, pustakawan, orang tua, seniman, mahasiswa — atau sekadar
 seseorang yang ingat cerita yang pernah diceritakan neneknya.
 
-Kontribusi bisa berupa tulisan, gambar komik, rekaman suara, atau video. Tidak ada
+Kontribusi bisa berupa tulisan, buku cerita bergambar, rekaman suara, atau video. Tidak ada
 standar produksi minimum — yang penting adalah niat untuk menjaga agar cerita itu
 tidak hilang.
 ```
@@ -734,7 +734,7 @@ Kabupaten Sumedang, Jawa Barat.
 
 TBM ini memiliki koleksi lebih dari 211 judul dan 514 eksemplar yang berfokus pada
 literasi anak dengan tema budaya Sunda. Koleksinya meliputi buku cerita bergambar,
-novel, cerita pendek, komik, dan buku nonfiksi — termasuk buku klasik Sunda seperti
+novel, cerita pendek, dan buku nonfiksi — termasuk buku klasik Sunda seperti
 Roesdi djeung Misnem.
 
 Kontak TBM:
@@ -767,13 +767,13 @@ sebuah cerita — dan keinginan untuk berbagi.
    Daftar dengan email. Akun kamu akan langsung aktif setelah verifikasi.
 
 2. Pilih format cerita
-   Teks, komik, audio, atau video — pilih sesuai kemampuan dan ceritamu.
+   Teks, buku-cerita-bergambar, audio, atau video — pilih sesuai kemampuan dan ceritamu.
 
 3. Isi informasi cerita
    Judul, kategori, bahasa, wilayah asal cerita, dan sinopsis singkat.
 
 4. Unggah kontenmu
-   Teks ditulis langsung di editor. Komik, audio, dan video diunggah sebagai file.
+   Teks ditulis langsung di editor. Buku Cerita Bergambar, audio, dan video diunggah sebagai file.
 
 5. Pratinjau dan kirim
    Cek tampilannya, lalu kirim untuk ditinjau kurator.
@@ -790,7 +790,7 @@ Format: Markdown atau teks biasa
 Panjang: Tidak ada batasan minimum/maksimum
 Tips: Sertakan pengantar singkat tentang asal-usul cerita
 
-KOMIK
+BUKU CERITA BERGAMBAR
 Format: JPG atau PNG, resolusi min. 1000px lebar
 Jumlah: 1–40 halaman
 Tips: Urutan halaman harus jelas; sertakan teks di dalam gambar
@@ -989,7 +989,7 @@ og:image:    /og/home.png
 
 ```
 title:       Semua Cerita — Ngadongeng
-description: Jelajahi koleksi dongeng Sunda: teks, komik, audio, dan video.
+description: Jelajahi koleksi dongeng Sunda: teks, buku-cerita-bergambar, audio, dan video.
              Filter berdasarkan format, kategori, bahasa, dan wilayah.
 ```
 
